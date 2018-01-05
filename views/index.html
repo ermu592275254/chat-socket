@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<title>Document</title>
+</head>
+<script src="socket.io.js"></script>
+<body>
+	<label for="username">username:</label><input id="username" type="text" />
+  <label for="password">password:</label><input id="password" type="text" />
+  <label for="name">name:</label><input id="name" type="text" />
+	<button onclick="register()">register</button>
+  <button onclick="login()">login</button>
+  <h1>add friend</h1>
+  <label for="friend"><input type="text" id="friend"/></label>
+  <button onclick="add()">addFriend</button>
+   <button onclick="deleteFriend()">deleteFriend</button>
+  <h1>send news</h1>
+  <label for="news">news</label>
+  <input type="text" id="news"/>
+  <label for="receiver">receiver</label>
+  <input type="text" id="receiver"/>
+  <button onclick="sendToOne()">send</button>
+</body>
+<script>
+  var socket = io('http://localhost:3000');
+  var user = '';
+  socket.open = function() {
+  	alert('is onopen');
+  }
+  function register() {
+  	var username = document.getElementById('username').value;
+    var password = document.getElementById('password').value;
+    var name = document.getElementById('name').value;
+  	socket.emit('register', {username: username,password:password,name:name});
+  }
+  function login() {
+    var username = document.getElementById('username').value;
+    var password = document.getElementById('password').value;
+    socket.emit('login', {username: username,password:password});
+  }
+  function add() {
+    var friend = document.getElementById('friend').value;
+    if(!user) {
+      alert('please login frist');
+      return;
+    }
+    socket.emit('addFriend', {username: user.username,addName: friend});
+  }
+  function deleteFriend() {
+    var friend = document.getElementById('friend').value;
+    if(!user) {
+      alert('please login frist');
+      return;
+    }
+    socket.emit('deleteFriend', {username: user.username,deleteName: friend});
+  }
+  function sendToOne() {
+    var content = document.getElementById('news').value;
+    var receiver = document.getElementById('receiver').value;
+    var data = {
+      content: content,
+      receiver:receiver,
+      sender: user.username
+    }
+    socket.emit('sendToOne', data);
+  }
+  socket.on('err', function(data) {
+    alert(JSON.stringify(data));
+    console.log(JSON.stringify(data));
+  })
+  socket.on('message', function(data) {
+    console.log(data);
+  })
+  socket.on('login', function(data){
+    user = data;
+    alert(data);
+  })
+  socket.on('register', function(data) {
+    alert(data);
+    console.log(data);
+  })
+  socket.on('addFriend', function(data){
+    alert(data);
+  })
+  socket.on('deleteFriend', function(data) {
+    alert(data);
+  })
+  socket.on('chat', function(data) {
+    alert(data.content);
+  })
+</script>
+</html>

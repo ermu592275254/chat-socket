@@ -1,0 +1,18 @@
+{
+  "name": "koa-demo",
+  "version": "1.0.0",
+  "description": "A koa project",
+  "author": "fulin",
+  "scripts": {
+    "dev": "node index.js",
+    "debug": "node debug index.js",
+    "hot": "supervisor index.js"
+  },
+  "dependencies": {
+    "mongoose": "^4.11.10",
+    "node-inspector": "^1.1.1",
+    "socket.io": "^2.0.4"
+  },
+  "devDependencies": {},
+  "engines": {}
+}
